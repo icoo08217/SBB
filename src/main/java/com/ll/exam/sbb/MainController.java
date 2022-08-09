@@ -189,7 +189,7 @@ public class MainController {
     );
     @GetMapping("/addPerson")
     @ResponseBody
-    public String addPerson(@ModelAttribute Person p){
+    public String addPerson(@ModelAttribute Person p){ // @ModelAttribute는 생략 가능
 
         persons.add(p);
 
