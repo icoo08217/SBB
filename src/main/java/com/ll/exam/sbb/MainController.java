@@ -1,14 +1,16 @@
 package com.ll.exam.sbb;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.http.HttpRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -107,5 +109,43 @@ public class MainController {
         String value = (String) session.getAttribute(name);
 
         return "세션변수 %s의 값은 %s입니다.".formatted(name, value);
+    }
+
+    private List<Article> articles = new ArrayList<>();
+    //  http://localhost:8080/addArticle?
+    @GetMapping("/addArticle")
+    @ResponseBody
+    public String addArticle(@RequestParam String title ,
+                              @RequestParam String body){
+        Article article = new Article(title, body);
+        articles.add(article);
+
+        return "%d번 글이 등록되었습니다.".formatted(article.getId());
+    }
+
+    @GetMapping("/article/{id}")
+    @ResponseBody
+    public Article getArticle(@PathVariable int id){
+        Article article = articles
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .get();
+
+        return article;
+    }
+}
+
+@AllArgsConstructor
+@Getter
+class Article {
+    private static int lastId=0;
+        private final int id;
+    private final String title;
+    private final String body;
+
+    public Article(String title, String body) {
+        this(++lastId, title, body);
+
     }
 }
