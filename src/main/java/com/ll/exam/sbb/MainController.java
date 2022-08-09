@@ -95,7 +95,7 @@ public class MainController {
 
     @GetMapping("/saveSession/{name}/{value}")
     @ResponseBody
-    public String saveSession(@PathVariable String name , @PathVariable String value, HttpServletRequest req){
+    public String saveSession(@PathVariable String name, @PathVariable String value, HttpServletRequest req) {
         HttpSession session = req.getSession();
 
         // req => 쿠키 => JSESSIONID => 세션을 얻을 수 있다.
@@ -107,7 +107,7 @@ public class MainController {
 
     @GetMapping("/getSession/{name}")
     @ResponseBody
-    public String getSession(@PathVariable String name , HttpSession session){
+    public String getSession(@PathVariable String name, HttpSession session) {
         String value = (String) session.getAttribute(name);
 
         return "세션변수 %s의 값은 %s입니다.".formatted(name, value);
@@ -123,8 +123,8 @@ public class MainController {
 
     @GetMapping("/addArticle")
     @ResponseBody
-    public String addArticle(@RequestParam String title ,
-                              @RequestParam String body){
+    public String addArticle(@RequestParam String title,
+                             @RequestParam String body) {
         Article article = new Article(title, body);
         articles.add(article);
 
@@ -133,7 +133,7 @@ public class MainController {
 
     @GetMapping("/article/{id}")
     @ResponseBody
-    public Article getArticle(@PathVariable int id){
+    public Article getArticle(@PathVariable int id) {
         Article article = articles
                 .stream()
                 .filter(a -> a.getId() == id)
@@ -153,7 +153,7 @@ public class MainController {
                 .stream()
                 .filter(a -> a.getId() == id)
                 .findFirst()
-                .get();
+                .orElse(null);
 
         if (article == null) {
             return "%d번 게시물은 존재하지 않습니다.".formatted(id);
@@ -165,6 +165,36 @@ public class MainController {
         return "%d번 글이 수정되었습니다.".formatted(article.getId());
     }
 
+    @GetMapping("/deleteArticle/{id}")
+    @ResponseBody
+    public String modifyArticle(@PathVariable int id) {
+        Article article = articles
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (article == null) {
+            return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+        }
+
+        articles.remove(article);
+
+        return "%d번 글이 삭제되었습니다.".formatted(article.getId());
+    }
+
+
+    private List<Person> persons = new ArrayList<>(
+            Arrays.asList()
+    );
+    @GetMapping("/addPerson")
+    @ResponseBody
+    public String addPerson(@ModelAttribute Person p){
+
+        persons.add(p);
+
+        return "%d번 고객이 등록되었습니다.".formatted(p.getId());
+    }
 }
 
 @AllArgsConstructor
@@ -178,5 +208,12 @@ class Article {
     public Article(String title, String body) {
         this(++lastId, title, body);
     }
+}
 
+@AllArgsConstructor
+@Getter @Setter
+class Person {
+    private int id;
+    private int age;
+    private String name;
 }
