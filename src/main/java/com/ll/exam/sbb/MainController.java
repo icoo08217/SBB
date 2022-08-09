@@ -2,6 +2,7 @@ package com.ll.exam.sbb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.http.HttpRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -111,8 +113,14 @@ public class MainController {
         return "세션변수 %s의 값은 %s입니다.".formatted(name, value);
     }
 
-    private List<Article> articles = new ArrayList<>();
-    //  http://localhost:8080/addArticle?
+    // 테스트 전용 리스트인 article
+    private List<Article> articles = new ArrayList<>(
+            Arrays.asList(
+                    new Article("제목1", "내용1"),
+                    new Article("제목2", "내용2")
+            )
+    );
+
     @GetMapping("/addArticle")
     @ResponseBody
     public String addArticle(@RequestParam String title ,
@@ -130,22 +138,45 @@ public class MainController {
                 .stream()
                 .filter(a -> a.getId() == id)
                 .findFirst()
-                .get();
+                .orElse(null);
 
         return article;
     }
+
+    // http://localhost:8080/modifyArticle?id=1&title=제목 new&body=내용 new
+    @GetMapping("/modifyArticle/{id}")
+    @ResponseBody
+    public String modifyArticle(@PathVariable int id,
+                                @RequestParam String title,
+                                @RequestParam String body) {
+        Article article = articles
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .get();
+
+        if (article == null) {
+            return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+        }
+
+        article.setTitle(title);
+        article.setBody(body);
+
+        return "%d번 글이 수정되었습니다.".formatted(article.getId());
+    }
+
 }
 
 @AllArgsConstructor
-@Getter
+@Getter @Setter
 class Article {
     private static int lastId=0;
-        private final int id;
-    private final String title;
-    private final String body;
+    private int id;
+    private String title;
+    private String body;
 
     public Article(String title, String body) {
         this(++lastId, title, body);
-
     }
+
 }
