@@ -24,7 +24,6 @@ class SbbApplicationTests {
 		q1.setCreateDate(LocalDateTime.now());
 		this.questionRepository.save(q1);  // 첫번째 질문 저장
 
-
 		Question q2 = new Question();
 		q2.setSubject("스프링부트 모델 질문입니다.");
 		q2.setContent("id는 자동으로 생성되나요?");
@@ -50,5 +49,18 @@ class SbbApplicationTests {
 		// SELECT * FROM question
 		Question q = questionRepository.findBySubject("sbb가 무엇인가요?");
 		assertEquals(1, q.getId());
+	}
+
+	@Test
+	void testJpa4() {
+		Question q = questionRepository.findBySubjectAndContent("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.");
+		assertEquals(1, q.getId());
+	}
+
+	@Test
+	void testJpa5() {
+		List<Question> qList = this.questionRepository.findBySubjectLike("sbb%");
+		Question q = qList.get(0);
+		assertEquals("sbb가 무엇인가요?", q.getSubject());
 	}
 }

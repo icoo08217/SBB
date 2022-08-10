@@ -2,7 +2,12 @@ package com.ll.exam.sbb;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface QuestionRepository extends JpaRepository<Question , Integer> { // < 해당 클래스 , primary key의 타입>
     // public Question findById(int id);
     Question findBySubject(String subject);
+    Question findBySubjectAndContent(String subject, String content);
+
+    List<Question> findBySubjectLike(String str);
 }
