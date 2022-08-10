@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter @Setter
 @Entity // 아래 Qestion 클래스는 엔티티 클래스이다.
@@ -22,4 +23,8 @@ public class Question {
     private String content;
 
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
+    // one -> Question , Many -> answer
+    private List<Answer> answerList; // question 하나에 여러개의 answer가 있다.
 }
