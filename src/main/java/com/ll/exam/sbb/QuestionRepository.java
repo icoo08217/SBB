@@ -20,7 +20,7 @@ public interface QuestionRepository extends JpaRepository<Question , Integer> { 
             value = "truncate question",
             nativeQuery = true
     )
-    void truncateMyTable();
+    void truncate(); // 외래키가 걸려있으면 에러 발생, 특정 데이터만 삭제 불가능
 
     @Transactional
     @Modifying
@@ -28,7 +28,7 @@ public interface QuestionRepository extends JpaRepository<Question , Integer> { 
             value = "SET FOREIGN_KEY_CHECKS = 0",
             nativeQuery = true
     )
-    void disableForeignKeyCheck();
+    void disableForeignKeyCheck(); // foreign key check를 끈다.
 
     @Transactional
     @Modifying
@@ -36,7 +36,7 @@ public interface QuestionRepository extends JpaRepository<Question , Integer> { 
             value = "SET FOREIGN_KEY_CHECKS = 1",
             nativeQuery = true
     )
-    void enableForeignKeyCheck();
+    void enableForeignKeyCheck(); // foreign key check를 켠다.
 
 
 }

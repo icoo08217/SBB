@@ -104,6 +104,6 @@ class SbbApplicationTests {
 	@Test
 	void testTruncate() {
 		this.questionRepository.disableForeignKeyCheck();
-		this.questionRepository.truncateMyTable();
+		this.questionRepository.truncate();
 	}
 }
