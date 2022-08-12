@@ -24,7 +24,7 @@ public class Question {
 
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE , fetch = FetchType.EAGER)
     // one -> Question , Many -> answer
     private List<Answer> answerList; // question 하나에 여러개의 answer가 있다.
 }
