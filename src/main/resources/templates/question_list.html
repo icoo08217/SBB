@@ -2,15 +2,30 @@
     <thead>
     <table border="1">
     <tr>
-        <th>Subject</th>
-        <th>createDate</th>
+        <th>제목</th>
+        <th>작성일자</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each=" question : ${questionList}">
+    <tr th:each=" question , loop : ${questionList}">
         <td th:text="${question.subject}"></td>
-        <td th:text="${question.createDate}"></td>
+<!--        <td th:text="${question.createDate}"></td>-->
+        <td th:text="|Date. ${#strings.substring(question.createDate, 2, 16)}|"></td>
     </tr>
+
+
+<!--     thymeleaf loop 활용 법-->
+<!--    <tr th:each="question , loop : ${questionList}">-->
+<!--        <td>-->
+<!--            [[${loop.count}]] / [[${loop.size}]]-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            [[${question.subject}]]-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            [[${question.createDate}]]-->
+<!--        </td>-->
+<!--    </tr>-->
     </tbody>
     </table>
 </table>
