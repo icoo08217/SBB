@@ -187,13 +187,19 @@ public class MainController {
     private List<Person> persons = new ArrayList<>(
             Arrays.asList()
     );
+
     @GetMapping("/addPerson")
     @ResponseBody
-    public String addPerson(@ModelAttribute Person p){ // @ModelAttribute는 생략 가능
+    public String addPerson(@ModelAttribute Person p) { // @ModelAttribute는 생략 가능
 
         persons.add(p);
 
         return "%d번 고객이 등록되었습니다.".formatted(p.getId());
+    }
+
+    @RequestMapping("/")
+    public String root() {
+        return "redirect:/question/list";
     }
 }
 
