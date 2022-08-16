@@ -29,4 +29,9 @@ public class Question {
     @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
     // one -> Question , Many -> answer
     private List<Answer> answerList = new ArrayList<>(); // question 하나에 여러개의 answer가 있다.
+
+    public void addAnswer(Answer answer) {
+        answer.setQuestion(this);
+        getAnswerList().add(answer);
+    }
 }

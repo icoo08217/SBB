@@ -18,6 +18,8 @@ public class AnswerService {
         Answer answer = new Answer();
         answer.setContent(content);
         answer.setCreateDate(LocalDateTime.now());
+
+        question.addAnswer(answer);
         answer.setQuestion(question);
         this.answerRepository.save(answer);
     }
