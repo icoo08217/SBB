@@ -3,10 +3,11 @@ package com.ll.exam.sbb.question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-
+@RequestMapping("/question")
 @Controller
 @RequiredArgsConstructor
 // 컨트롤러는 Repository가 있는지 몰라야한다.
@@ -16,13 +17,13 @@ import java.util.List;
 // 서비스는 컨트롤러를 몰라야 한다.
 // DB는 리포지터리를 몰라야한다.
 // SPRING DATA JPA는 MySQL을 몰라야한다.
-    // SPRING DATA JPA -> JPA -> 하이버네이트 -> JDBC -> MySQL Driver -> MySQL
+// SPRING DATA JPA -> JPA -> 하이버네이트 -> JDBC -> MySQL Driver -> MySQL
 public class QuestionController {
 
     private final QuestionService questionService;
     private final QuestionRepository questionRepository;
 
-    @RequestMapping("/question/list")
+    @RequestMapping("/list")
     // 이 자리에 @ResponseBody가 없으면 resources/template/question_list.html 파일을 view 로 삼는다.
     public String list(Model model) {
 
@@ -33,5 +34,14 @@ public class QuestionController {
         model.addAttribute("questionList", questionList);
 
         return "question_list";
+    }
+
+    @RequestMapping(value = "/detail/{id}")
+    public String detail(Model model, @PathVariable int id) {
+
+        Question question = questionService.getQuestion(id);
+        model.addAttribute("question" , question);
+
+        return "question_detail";
     }
 }

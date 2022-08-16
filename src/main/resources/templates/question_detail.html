@@ -1,0 +1,9 @@
+<h1 th:text="|제목 : ${question.subject}|"></h1>
+<div th:text="|등록일자 : ${#temporals.format(question.createDate , 'yyyy.MM.dd HH:mm')}|"></div>
+<div th:text="${question.content}"></div>
+
+<form method="POST" th:action="@{|/answer/create/${question.id}|}">
+    <textarea name="content" rows="15"></textarea>
+<!--    <input type="submit" value="답변등록">-->
+    <button type="submit">답변등록</button>
+</form>
