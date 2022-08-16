@@ -1,0 +1,16 @@
+<table>
+    <thead>
+    <table border="1">
+    <tr>
+        <th>Subject</th>
+        <th>createDate</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each=" question : ${questionList}">
+        <td th:text="${question.subject}"></td>
+        <td th:text="${question.createDate}"></td>
+    </tr>
+    </tbody>
+    </table>
+</table>
