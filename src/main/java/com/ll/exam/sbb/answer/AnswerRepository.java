@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
 
-public interface AnswerRepository extends JpaRepository<Answer , Integer> , RepositoryUtil {
+public interface AnswerRepository extends JpaRepository<Answer , Long> , RepositoryUtil {
 
     @Transactional
     @Modifying

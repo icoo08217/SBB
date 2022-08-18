@@ -37,7 +37,7 @@ public class AnswerRepositoryTest {
         QuestionRepositoryTests.createSampleData(questionRepository);
 
         // 관련 답변이 하나도 없는 상태에서 쿼리 발생
-        Question q = questionRepository.findById(1).get();
+        Question q = questionRepository.findById(1L).get();
 
         Answer a1 = new Answer();
         a1.setContent("sbb는 질문답변 게시판 입니다.");
@@ -65,7 +65,7 @@ public class AnswerRepositoryTest {
 
     @Test
     void save() {
-        Question q = questionRepository.findById(2).get();
+        Question q = questionRepository.findById(2L).get();
 
         Answer a = new Answer();
         a.setContent("네 자동으로 생성됩니다.");
@@ -76,7 +76,7 @@ public class AnswerRepositoryTest {
 
     @Test
     void 조회() {
-        Optional<Answer> oa = this.answerRepository.findById(1);
+        Optional<Answer> oa = this.answerRepository.findById(1L);
         assertTrue(oa.isPresent());
         Answer a = oa.get();
         assertThat(a.getContent()).isEqualTo("sbb는 질문답변 게시판 입니다.");
@@ -87,7 +87,7 @@ public class AnswerRepositoryTest {
 
     @Test
     void 관련된_question_조회() {
-        Answer a = answerRepository.findById(1).get();
+        Answer a = answerRepository.findById(1L).get();
         Question q = a.getQuestion();
 
         assertThat(q.getId()).isEqualTo(1);
@@ -99,7 +99,7 @@ public class AnswerRepositoryTest {
     @Rollback(value = false)
     void question으로부터_관련된_질문들_조회() {
         //SELECT * FROM question WHERE id = 1
-        Question q = questionRepository.findById(1).get();
+        Question q = questionRepository.findById(1L).get();
         // DB 연결 끊킴
         // 동일 트랜잭션 내에서는 정말로 객체를 공유하는가 ?
         // 영속성 컨텍스트로 인하여 객체는 하나만 사용된다.

@@ -27,15 +27,15 @@ public class QuestionService {
         return this.questionRepository.findAll();
     }
 
-    public Question findById(int id) {
-        Question q1 = questionRepository.findById(2).get();
-        Question q2 = questionRepository.findById(2).get();
+    public Question findById(Long id) {
+        Question q1 = questionRepository.findById(2L).get();
+        Question q2 = questionRepository.findById(2L).get();
         System.out.println(q2.getAnswerList());
 
         return q2;
     }
 
-    public Question getQuestion(int id) {
+    public Question getQuestion(Long id) {
         Optional<Question> oq = questionRepository.findById(id);
 
         if (oq.isPresent()) {
