@@ -13,10 +13,14 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().antMatchers("/**").permitAll()
-                .and()
+        http.authorizeHttpRequests()
+                // 모든 경로(/**)에 해당 하는 url들을
+                .antMatchers("/**")
+                // 허락한다.
+                .permitAll()
+                .and() // 문맥의 끝이라고 보면 됨.
                 .csrf().ignoringAntMatchers("/h2-console/**")
-                .and()
+                .and()// 문맥의 끝이라고 보면 됨.
                 .headers()
                 .addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
