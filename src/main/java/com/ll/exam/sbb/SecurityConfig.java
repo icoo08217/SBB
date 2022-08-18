@@ -15,10 +15,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests().antMatchers("/**").permitAll()
                 .and()
-                    .csrf().ignoringAntMatchers("/h2-console/**")
+                .csrf().ignoringAntMatchers("/h2-console/**")
                 .and()
-                    .headers()
-                    .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                .headers()
+                .addHeaderWriter(new XFrameOptionsHeaderWriter(
                         XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
                 ));
 
