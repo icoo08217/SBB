@@ -5,11 +5,13 @@ import com.ll.exam.sbb.user.SiteUser;
 import com.ll.exam.sbb.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -34,7 +36,7 @@ public class QuestionController {
 
     @RequestMapping("/list")
     // 이 자리에 @ResponseBody가 없으면 resources/template/question_list.html 파일을 view 로 삼는다.
-    public String list(Model model , @RequestParam(value = "page" , defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
 
         Page<Question> paging = questionService.getList(page);
         model.addAttribute("paging", paging);
@@ -43,7 +45,7 @@ public class QuestionController {
     }
 
     @RequestMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable Long id , AnswerForm answerForm) {
+    public String detail(Model model, @PathVariable Long id, AnswerForm answerForm) {
 
         Question question = questionService.getQuestion(id);
         model.addAttribute("question", question);
@@ -59,7 +61,7 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()") // 로그인이 되어 있어야만 가능한 메서드라는 뜻이다.
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm , BindingResult bindingResult , Principal principal){
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             return "question_form";
@@ -67,9 +69,42 @@ public class QuestionController {
 
         SiteUser siteUser = userService.getUser(principal.getName());
 
-        questionService.create(questionForm.getSubject() , questionForm.getContent() , siteUser);
+        questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
+
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String questionModify(QuestionForm questionForm, @PathVariable("id") Long id, Principal principal) {
+
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다");
+        }
+
+        questionForm.setSubject(question.getSubject());
+        questionForm.setContent(question.getContent());
+
+        return "question_form";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal, @PathVariable("id") Long id) {
+        if (bindingResult.hasErrors()) {
+            return "question_form";
+        }
+
+        Question question = questionService.getQuestion(id);
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다");
+        }
+
+        questionService.modify(question, questionForm.getSubject(), questionForm.getContent());
+
+        return String.format("redirect:/question/detail/%s", id);
 
     }
 }

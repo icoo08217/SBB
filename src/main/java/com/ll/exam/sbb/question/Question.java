@@ -27,6 +27,9 @@ public class Question {
 
     private LocalDateTime createDate;
 
+    // 수정 일자
+    private LocalDateTime modifyDate;
+
     @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
     // one -> Question , Many -> answer
     private List<Answer> answerList = new ArrayList<>(); // question 하나에 여러개의 answer가 있다.

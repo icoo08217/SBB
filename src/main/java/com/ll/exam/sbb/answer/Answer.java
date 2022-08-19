@@ -20,6 +20,8 @@ public class Answer {
 
     private LocalDateTime createDate;
 
+    private LocalDateTime modifyDate;
+
     @ManyToOne // 관계 설정
     // Many -> Answer , One -> Question 을 의미한다
     private Question question;

@@ -62,4 +62,11 @@ public class QuestionService {
 
         return questionRepository.findAll(pageable);
     }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        questionRepository.save(question);
+    }
 }
