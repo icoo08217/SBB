@@ -1,6 +1,7 @@
 package com.ll.exam.sbb.question;
 
 import com.ll.exam.sbb.answer.Answer;
+import com.ll.exam.sbb.user.SiteUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,6 +30,9 @@ public class Question {
     @OneToMany(mappedBy = "question" , cascade = CascadeType.REMOVE)
     // one -> Question , Many -> answer
     private List<Answer> answerList = new ArrayList<>(); // question 하나에 여러개의 answer가 있다.
+
+    @ManyToOne
+    private SiteUser author;
 
     public void addAnswer(Answer answer) {
         answer.setQuestion(this);
