@@ -21,12 +21,16 @@ public class SecurityConfig {
                 // 허락한다.
                 .permitAll()
                 .and() // 문맥의 끝이라고 보면 됨.
-                .csrf().ignoringAntMatchers("/h2-console/**")
+                    .csrf().ignoringAntMatchers("/h2-console/**")
                 .and()// 문맥의 끝이라고 보면 됨.
-                .headers()
-                .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
-                ));
+                    .headers()
+                    .addHeaderWriter(new XFrameOptionsHeaderWriter(
+                            XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
+                ))
+                .and()
+                    .formLogin()
+                    .loginPage("/user/login")
+                    .defaultSuccessUrl("/");
 
         return http.build();
     }

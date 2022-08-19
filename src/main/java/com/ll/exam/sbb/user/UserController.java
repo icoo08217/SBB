@@ -28,8 +28,8 @@ public class UserController {
             return "signup_form";
         }
 
-        if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())){
-            bindingResult.rejectValue("password2" , "passwordInCorrect" , "패스워드가 일치하지 않습니다.");
+        if (!userCreateForm.getPassword1().equals(userCreateForm.getPassword2())) {
+            bindingResult.rejectValue("password2", "passwordInCorrect", "패스워드가 일치하지 않습니다.");
             return "signup_form";
         }
 
@@ -47,6 +47,10 @@ public class UserController {
 
 
         return "redirect:/";
+    }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login_form";
     }
 }
