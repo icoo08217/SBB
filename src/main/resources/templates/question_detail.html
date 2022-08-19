@@ -36,7 +36,11 @@
 <!--        공통된 부분 form_errors를 사용-->
         <div th:replace="form_errors :: formErrorsFragment"></div>
 <!--        -->
-        <textarea th:field="*{content}" id="content" rows="10" class="form-control"></textarea>
+<!--       sec:authorize="isAnonymous()" - 현재 로그아웃 상태  -->
+        <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" rows="10" class="form-control"></textarea>
+<!--       sec:authorize="isAuthenticated()" - 현재 로그인 상태 -->
+        <textarea sec:authorize="isAuthenticated()" th:field="*{content}" rows="10" class="form-control"></textarea>
+
         <input type="submit" value="답변등록" class="btn btn-primary my-2">
     </form>
 </div>
