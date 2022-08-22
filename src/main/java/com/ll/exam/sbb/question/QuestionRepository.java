@@ -5,6 +5,7 @@ package com.ll.exam.sbb.question;
 import com.ll.exam.sbb.base.RepositoryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +22,8 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, Repos
 
     // 페이징을 위한 메소드
     Page<Question> findAll(Pageable pageable);
+
+    Page<Question> findAll(Specification<Question> spec , Pageable pageable);
 
     @Transactional
     @Modifying

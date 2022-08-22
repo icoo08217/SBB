@@ -5,6 +5,7 @@ import com.ll.exam.sbb.user.SiteUser;
 import com.ll.exam.sbb.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -36,10 +37,12 @@ public class QuestionController {
 
     @RequestMapping("/list")
     // 이 자리에 @ResponseBody가 없으면 resources/template/question_list.html 파일을 view 로 삼는다.
-    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page ,
+                       @RequestParam(value = "kw" , defaultValue = "") String kw) {
 
-        Page<Question> paging = questionService.getList(page);
+        Page<Question> paging = questionService.getList(page , kw);
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
 
         return "question_list";
     }
