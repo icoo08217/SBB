@@ -37,6 +37,8 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-security' // spring security
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'  // 스프링 시큐리티 관련 타임리프 라이브러리
+
+	implementation 'org.commonmark:commonmark:0.18.2' // markdown 설치
 }
 
 tasks.named('test') {
