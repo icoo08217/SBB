@@ -24,6 +24,7 @@ public class AnswerService {
 
         answer.setQuestion(question);
         answer.setAuthor(author);
+
         answerRepository.save(answer);
 
         return answer;
