@@ -23,6 +23,10 @@ public class Question {
     private String subject;
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(columnDefinition = "integer default 0")
+    private Integer hitCount = 0;
+
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
 
