@@ -1,11 +1,8 @@
-
-
 package com.ll.exam.sbb.question;
 
 import com.ll.exam.sbb.base.RepositoryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,14 +17,20 @@ public interface QuestionRepository extends JpaRepository<Question, Long>, Repos
 
     List<Question> findBySubjectLike(String s);
 
-    // 페이징을 위한 메소드
-    Page<Question> findAll(Pageable pageable);
-
-    Page<Question> findAll(Specification<Question> spec , Pageable pageable);
-
     @Transactional
     @Modifying
-//    @Query(value = "truncate question", nativeQuery = true)
     @Query(value = "ALTER TABLE question AUTO_INCREMENT = 1", nativeQuery = true)
     void truncate(); // 이거 지우면 안됨, truncateTable 하면 자동으로 이게 실행됨
+
+    Page<Question> findBySubjectContains(String kw, Pageable pageable);
+
+    Page<Question> findBySubjectContainsOrContentContains(String kw, String kw_, Pageable pageable);
+
+    Page<Question> findBySubjectContainsOrContentContainsOrAuthor_usernameContains(String kw, String kw_, String kw__, Pageable pageable);
+
+    Page<Question> findBySubjectContainsOrContentContainsOrAuthor_usernameContainsOrAnswerList_contentContains(String kw, String kw_, String kw__, String kw___, Pageable pageable);
+
+    Page<Question> findDistinctBySubjectContainsOrContentContainsOrAuthor_usernameContainsOrAnswerList_contentContains(String kw, String kw_, String kw__, String kw___, Pageable pageable);
+
+    Page<Question> findDistinctBySubjectContainsOrContentContainsOrAuthor_usernameContainsOrAnswerList_contentContainsOrAnswerList_author_username(String kw, String kw_, String kw__, String kw___, String kw____, Pageable pageable);
 }

@@ -9,22 +9,21 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
-@Getter @Setter
 public class Answer {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 200)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime createDate;
-
     private LocalDateTime modifyDate;
 
-    @ManyToOne // 관계 설정
-    // Many -> Answer , One -> Question 을 의미한다
+    @ManyToOne
     private Question question;
 
     @ManyToOne

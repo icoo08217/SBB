@@ -1,3 +1,5 @@
+
+
 package com.ll.exam.sbb.user;
 
 import lombok.Getter;
@@ -7,7 +9,7 @@ public enum UserRole {
     ADMIN("ROLE_ADMIN"),
     USER("ROLE_USER");
 
-    UserRole(String value){
+    UserRole(String value) {
         this.value = value;
     }
 

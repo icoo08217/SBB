@@ -1,91 +1,48 @@
 package com.ll.exam.sbb.question;
 
 import com.ll.exam.sbb.DataNotFoundException;
-import com.ll.exam.sbb.answer.Answer;
 import com.ll.exam.sbb.user.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor // 생성자 주입
+@RequiredArgsConstructor
 public class QuestionService {
-
     private final QuestionRepository questionRepository;
 
-//    필드 주입
-//    @Autowired
-//    private QuestionRepository questionRepository;
+    public Page<Question> getList(String kw, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
 
-    // 검색 쿼리
-    private Specification<Question> search(String kw) {
-        return new Specification<>() {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts)); // 한 페이지에 10까지 가능
 
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                query.distinct(true); // 중복을 제거
-                Join<Question, SiteUser> u1 = q.join("author", JoinType.LEFT);
-                Join<Question, Answer> a = q.join("answerList", JoinType.LEFT);
-                Join<Answer, SiteUser> u2 = a.join("author", JoinType.LEFT);
-                return cb.or(cb.like(q.get("subject"), "%" + kw + "%"), // 제목
-                        cb.like(q.get("content"), "%" + kw + "%"),      // 내용
-                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
-                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
-                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
-            }
-        };
-    }
-
-    public List<Question> getList() {
-        return this.questionRepository.findAll();
-    }
-
-    public Question findById(Long id) {
-        Question q1 = questionRepository.findById(2L).get();
-        Question q2 = questionRepository.findById(2L).get();
-        System.out.println(q2.getAnswerList());
-
-        return q2;
-    }
-
-    public Question getQuestion(Long id) {
-        Optional<Question> oq = questionRepository.findById(id);
-
-        if (oq.isPresent()) {
-            return oq.get();
+        if ( kw == null || kw.trim().length() == 0 ) {
+            return questionRepository.findAll(pageable);
         }
 
-        throw new DataNotFoundException("question is not found");
+        return questionRepository.findDistinctBySubjectContainsOrContentContainsOrAuthor_usernameContainsOrAnswerList_contentContainsOrAnswerList_author_username(kw, kw, kw, kw, kw, pageable);
     }
 
-    public void create(String subject , String content , SiteUser author) {
+    public Question getQuestion(long id) {
+        return questionRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("no %d question not found,".formatted(id)));
+    }
+
+    public void create(String subject, String content, SiteUser author) {
         Question q = new Question();
         q.setSubject(subject);
         q.setContent(content);
-        q.setCreateDate(LocalDateTime.now());
         q.setAuthor(author);
+        q.setCreateDate(LocalDateTime.now());
         questionRepository.save(q);
-    }
-
-    public Page<Question> getList(int page , String kw) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page, 10 , Sort.by(sorts));
-        Specification<Question> spec = search(kw);
-
-        return questionRepository.findAll(spec , pageable);
     }
 
     public void modify(Question question, String subject, String content) {
@@ -96,12 +53,12 @@ public class QuestionService {
     }
 
     public void delete(Question question) {
-        questionRepository.delete(question);
+        this.questionRepository.delete(question);
     }
 
-    // 추천 기능
-    public void vote(Question question , SiteUser siteUser) {
+    public void vote(Question question, SiteUser siteUser) {
         question.getVoter().add(siteUser);
+
         questionRepository.save(question);
     }
 }

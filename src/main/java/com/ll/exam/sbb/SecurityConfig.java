@@ -15,45 +15,40 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+// 시큐리티 설정
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true) // 로그인 여부를 판별하기 위해 사용했던 @PreAuthorize 애너테이션을 사용하기 위해 반드시 필요하다
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-
     private final UserSecurityService userSecurityService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
-                // 모든 경로(/**)에 해당 하는 url들을
-                .antMatchers("/**")
-                // 허락한다.
-                .permitAll()
-                .and() // 문맥의 끝이라고 보면 됨.
-                    .csrf().ignoringAntMatchers("/h2-console/**")
-                .and()// 문맥의 끝이라고 보면 됨.
-                    .headers()
-                    .addHeaderWriter(new XFrameOptionsHeaderWriter(
-                            XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN
-                ))
+        http.authorizeRequests()
+                .antMatchers("/**").permitAll()
+                .and() // 문맥의 끝
+                .csrf().ignoringAntMatchers("/h2-console/**")
+                .and() // 문맥의 끝
+                .headers().addHeaderWriter(new XFrameOptionsHeaderWriter(
+                        XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
                 .and()
-                    .formLogin()
-                    .loginPage("/user/login")
-                    .defaultSuccessUrl("/")
+                .formLogin()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/")
                 .and()
-                // logout
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                 .logoutSuccessUrl("/")
-                .invalidateHttpSession(true) //  로그아웃시 생성된 사용자 세션도 삭제하도록 처리
-            ;
+                .invalidateHttpSession(true);
 
         return http.build();
     }
 
+    // 스프링 시스템에 객체를 등록한다.
+    // @Configuration 라는 어노테이션을 가진 클래스에서만 사용가능하다.
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -61,5 +56,4 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
 }
