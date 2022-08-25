@@ -43,4 +43,8 @@ public class Question {
         answer.setQuestion(this);
         getAnswerList().add(answer);
     }
+
+    public void updateHitCount(Integer hitCount) {
+        this.hitCount = hitCount;
+    }
 }

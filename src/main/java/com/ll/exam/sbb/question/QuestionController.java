@@ -47,6 +47,9 @@ public class QuestionController {
     public String detail(Model model, @PathVariable long id, AnswerForm answerForm) {
         Question question = questionService.getQuestion(id);
 
+        // 조회수 증가 로직 추가
+        questionService.updateHitCount(question.getId() , question);
+
         model.addAttribute("question", question);
 
         return "question_detail";

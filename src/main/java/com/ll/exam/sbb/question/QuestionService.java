@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,4 +68,12 @@ public class QuestionService {
         questionRepository.save(question);
     }
 
+    @Transactional
+    public void updateHitCount(Long id ,Question question) {
+        Question q = questionRepository.findById(id).orElseThrow((() ->
+                new IllegalStateException("해당 게시글이 존재하지 않습니다.")));
+
+        q.updateHitCount(q.getHitCount() + 1);
+
+    }
 }
